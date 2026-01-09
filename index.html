@@ -5,48 +5,47 @@
   <title>Генератор названий книг</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       background: #0f0f0f;
-      color: #f2f2f2;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
     .app {
-      background: #1b1b1b;
+      background: #1c1c1c;
       padding: 20px;
       border-radius: 12px;
-      width: 380px;
+      width: 400px;
     }
     h1 {
       text-align: center;
-      margin-bottom: 15px;
     }
     select, textarea, button {
       width: 100%;
-      margin-bottom: 10px;
+      margin-top: 10px;
       padding: 8px;
       border-radius: 6px;
       border: none;
+      font-size: 14px;
     }
     button {
       background: #7b1fa2;
       color: white;
-      font-size: 16px;
       cursor: pointer;
+      font-size: 16px;
     }
     button:hover {
       background: #9c27b0;
     }
     .result {
       margin-top: 15px;
-      padding: 10px;
       background: #111;
+      padding: 10px;
       border-radius: 6px;
-      text-align: center;
-      font-size: 18px;
       font-weight: bold;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -57,32 +56,22 @@
 
   <select id="genre">
     <option>Фэнтези</option>
-    <option>Хоррор</option>
     <option>Ужасы</option>
+    <option>Хоррор</option>
     <option>Роман</option>
     <option>Детектив</option>
-    <option>Легенды</option>
     <option>Мифы</option>
     <option>Сказка</option>
     <option>Научная фантастика</option>
-    <option>Утопия</option>
-    <option>Путешествия</option>
-    <option>Комедия</option>
-    <option>Подростковая литература</option>
     <option>Драма</option>
-    <option>Трагедия</option>
-    <option>Научная книга</option>
-    <option>Психология</option>
-    <option>Бизнес</option>
-    <option>Комикс</option>
-    <option>Манга</option>
+    <option>Комедия</option>
   </select>
 
-  <textarea id="plot" rows="4" placeholder="Краткий сюжет (2–5 предложений)"></textarea>
+  <textarea id="plot" rows="4" placeholder="Краткий сюжет"></textarea>
 
-  <button onclick="generateTitle()">Придумать название</button>
+  <button id="generateBtn">Придумать название</button>
 
-  <div class="result" id="result">...</div>
+  <div class="result" id="result">Здесь появятся названия</div>
 </div>
 
 <script>
@@ -90,38 +79,48 @@ function random(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+document.getElementById("generateBtn").addEventListener("click", generateTitle);
+
 function generateTitle() {
-  const genre = document.getElementById("genre").value;
   const plot = document.getElementById("plot").value.toLowerCase();
+  let subjects = [];
+  let moods = [];
+  let extras = ["Последний", "Тихий", "Запретный", "Темный", "Забытый"];
 
-  let moodWords = [];
-  let mainWords = [];
+  if (plot.includes("лес")) subjects.push("Лес", "Чаща");
+  if (plot.includes("лагер")) subjects.push("Лагерь", "Корпус");
+  if (plot.includes("ноч")) moods.push("Ночи", "Темноты");
+  if (plot.includes("тайн")) moods.push("Тайны");
+  if (plot.includes("смерт")) moods.push("Смерти");
+  if (plot.includes("люб")) moods.push("Сердца");
+  if (plot.includes("путь") || plot.includes("дорог"))
+    subjects.push("Путь", "Дорога");
 
-  if (plot.includes("лес")) mainWords.push("Лес");
-  if (plot.includes("ноч")) moodWords.push("Ночи");
-  if (plot.includes("лагер")) mainWords.push("Лагерь");
-  if (plot.includes("кров")) moodWords.push("Крови");
-  if (plot.includes("люб")) moodWords.push("Сердца");
-  if (plot.includes("тайн")) moodWords.push("Тайны");
-  if (plot.includes("путь") || plot.includes("дорог")) mainWords.push("Путь");
-  if (plot.includes("смерт")) moodWords.push("Смерти");
+  if (subjects.length === 0)
+    subjects = ["Тень", "История", "Голос", "Предел"];
 
-  if (mainWords.length === 0) {
-    mainWords = ["Тень", "История", "Предел", "Голос"];
+  if (moods.length === 0)
+    moods = ["Ночи", "Выбора", "Памяти"];
+
+  const patterns = [
+    () => random(subjects) + " " + random(moods),
+    () => random(moods) + " " + random(subjects),
+    () => random(extras) + " " + random(subjects),
+    () => "Последний " + random(subjects)
+  ];
+
+  let results = [];
+
+  while (results.length < 5) {
+    let title = random(patterns)();
+    if (!results.includes(title)) {
+      results.push(title);
+    }
   }
 
-  if (moodWords.length === 0) {
-    moodWords = ["Ночи", "Выбора", "Памяти"];
-  }
-
-  let title;
-
-  if (Math.random() > 0.5) {
-    title = random(mainWords) + " " + random(moodWords);
-  } else {
-    title = random(moodWords) + " " + random(mainWords);
-  }
-
-  document.getElementById("result").textContent = title;
+  document.getElementById("result").innerHTML = results.join("<br>");
 }
 </script>
+
+</body>
+</html>
