@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор названий книг</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .app {
+      background: #1b1b1b;
+      padding: 20px;
+      border-radius: 12px;
+      width: 380px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    select, textarea, button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: #7b1fa2;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #9c27b0;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      background: #111;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <h1>📖 Название книги</h1>
+
+  <select id="genre">
+    <option>Фэнтези</option>
+    <option>Хоррор</option>
+    <option>Ужасы</option>
+    <option>Роман</option>
+    <option>Детектив</option>
+    <option>Легенды</option>
+    <option>Мифы</option>
+    <option>Сказка</option>
+    <option>Научная фантастика</option>
+    <option>Утопия</option>
+    <option>Путешествия</option>
+    <option>Комедия</option>
+    <option>Подростковая литература</option>
+    <option>Драма</option>
+    <option>Трагедия</option>
+    <option>Научная книга</option>
+    <option>Психология</option>
+    <option>Бизнес</option>
+    <option>Комикс</option>
+    <option>Манга</option>
+  </select>
+
+  <textarea id="plot" rows="4" placeholder="Краткий сюжет (2–5 предложений)"></textarea>
+
+  <button onclick="generateTitle()">Придумать название</button>
+
+  <div class="result" id="result">...</div>
+</div>
+
+<script>
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateTitle() {
+  const genre = document.getElementById("genre").value;
+  const plot = document.getElementById("plot").value.toLowerCase();
+
+  let moodWords = [];
+  let mainWords = [];
+
+  if (plot.includes("лес")) mainWords.push("Лес");
+  if (plot.includes("ноч")) moodWords.push("Ночи");
+  if (plot.includes("лагер")) mainWords.push("Лагерь");
+  if (plot.includes("кров")) moodWords.push("Крови");
+  if (plot.includes("люб")) moodWords.push("Сердца");
+  if (plot.includes("тайн")) moodWords.push("Тайны");
+  if (plot.includes("путь") || plot.includes("дорог")) mainWords.push("Путь");
+  if (plot.includes("смерт")) moodWords.push("Смерти");
+
+  if (mainWords.length === 0) {
+    mainWords = ["Тень", "История", "Предел", "Голос"];
+  }
+
+  if (moodWords.length === 0) {
+    moodWords = ["Ночи", "Выбора", "Памяти"];
+  }
+
+  let title;
+
+  if (Math.random() > 0.5) {
+    title = random(mainWords) + " " + random(moodWords);
+  } else {
+    title = random(moodWords) + " " + random(mainWords);
+  }
+
+  document.getElementById("result").textContent = title;
+}
+</script>
